@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest>
+	<field key="author" value="ColdTrick IT Solutions" />
+	<field key="version" value="1.2" />
+	<field key="description" value="Folders extension for Elgg Files"/>
+	<field key="website" value="http://www.coldtrick.com" />
+	<field key="copyright" value="(C) ColdTrick 2010" />
+	<field key="licence" value="GNU Public License version 2" />
+	<field key="elgg_version" value="2010040201" />
+</plugin_manifest>
+<!--
+
+Should be place below file plugin in plugin order.
+
+======================
+Features
+======================
+- Folders for users and for groups
+- Group admin can control who can manage folders in a group
+- Completely (forward and backward) compatible with the Folder plugin
+- Order files into folders
+- Drag files onto folders
+- Drag and drop folders to rearange folder structure
+- Delete a folder including subfolders (and optional all files in it)
+- Update folder access on all subfolders (optional including all files) 
+- Infinite folder structure (no limitations in length and depth)
+- Breadcrumb on file full view
+- Switching of view type (list/gallery)
+- Take over of default file menu options
+
+======================
+Credits
+======================
+- Tingxi Tan @ Grid Research Centre (http://grc.ucalgary.ca) for the original idea of the folder plugin
+- Thanks to jsTree (http://jstree.com) for the wonderful jQuery tree plugin
+
+======================
+Version History
+======================
+1.2 (2011-06-17):
+	- added: widget for dashboard, profile and group
+
+1.1 (2011-06-07):
+	- added: folder deeplink functionality using #tag id's
+	
+1.0.1 (2011-01-17):
+	- fixed: menu error when not loggedin (thanks to Luis Pereira)
+
+1.0 (2010-12-30):
+	- initial release
+
+-->
