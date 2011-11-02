@@ -37,12 +37,10 @@ Credits
 ======================
 Version History
 ======================
-x.x:
-	- changed: moved some function out of start.php
-	- changed: access of group folder to be handled over access hook
-
 1.2.1 (2011-11-02):
 	- fixed: wrong name in group file free for access
+	- changed: moved some function out of start.php
+	- changed: access of group folder to be handled over access hook
 
 1.2 (2011-06-17):
 	- added: widget for dashboard, profile and group
