@@ -240,5 +240,3 @@
 		
 		return $result;
 	}
-
-?>

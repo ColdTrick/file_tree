@@ -49,15 +49,16 @@
 	$form_data .= "<div><label>" . elgg_echo("file_tree:forms:edit:parent") . "</label></div>\n";
 	$form_data .= elgg_view("input/folder_select", array("internalname" => "parent_guid", "value" => $parent, "owner_guid" => $page_owner->getGUID()));
 	
+	// set context to influence access
+	$context = get_context();
+	set_context("file_tree");
+	
 	$form_data .= "<div><label>" . elgg_echo("access") . "</label></div>\n";
-	if($page_owner instanceof ElggGroup){
-		$access_options = array(
-			ACCESS_PUBLIC => elgg_echo("PUBLIC"),
-			ACCESS_LOGGED_IN => elgg_echo("LOGGED_IN"),
-			$page_owner->group_acl => elgg_echo("groups:group") . ": " . $page_owner->name
-			);
-	}
-	$form_data .= elgg_view("input/access", array("internalname" => "access_id", "value" => $access_id, "options" => $access_options));
+	$form_data .= elgg_view("input/access", array("internalname" => "access_id", "value" => $access_id));
+	
+	// restore context
+	set_context($context);
+	
 	if(!empty($folder)){
 		$form_data .= "<div id='file_tree_edit_form_access_extra'>";
 		$form_data .= "<div>" . elgg_view("input/checkboxes", array("options" => array(elgg_echo("file_tree:forms:edit:change_children_access") => "yes"), "value" => "yes", "internalname" => "change_children_access")) . "</div>";

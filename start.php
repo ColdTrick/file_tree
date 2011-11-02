@@ -4,6 +4,8 @@
 	define("FILE_TREE_RELATIONSHIP", "folder_of");
 
 	require_once(dirname(__FILE__) . "/lib/functions.php");
+	require_once(dirname(__FILE__) . "/lib/events.php");
+	require_once(dirname(__FILE__) . "/lib/hooks.php");
 	
 	function file_tree_init(){
 		
@@ -128,130 +130,12 @@
 		}
 	}
 	
-	function file_tree_object_handler($event, $type, $object){
-		
-		if(!empty($object) && ($object instanceof ElggObject)){
-			if($object->getSubtype() == "file"){
-				$folder_guid = get_input("folder_guid", false);
-				
-				if(!empty($folder_guid)){
-					if($folder = get_entity($folder_guid)){
-						if($folder->getSubtype() != FILE_TREE_SUBTYPE){
-							unset($folder_guid);
-						}
-					} else {
-						unset($folder_guid);
-					}
-				}
-				
-				if($folder_guid !== false){
-					// remove old relationships
-					remove_entity_relationships($object->getGUID(), FILE_TREE_RELATIONSHIP, true);
-					
-					if(!empty($folder_guid)){
-						add_entity_relationship($folder_guid, FILE_TREE_RELATIONSHIP, $object->getGUID());
-					}
-				}
-			}
-		}
-	}
-	
-	function file_tree_object_handler_delete($event, $type, $object){
-		
-		if(!empty($object) && ($object instanceof ElggObject)){
-			if($object->getSubtype() == FILE_TREE_SUBTYPE){
-				// find subfolders
-				$options = array(
-					"type" => "object",
-					"subtype" => FILE_TREE_SUBTYPE,
-					"owner_guid" => $object->getOwner(),
-					"limit" => false,
-					"metadata_name" => "parent_guid",
-					"metadata_value" => $object->getGUID()
-				);
-				
-				if($subfolders = elgg_get_entities_from_metadata($options)){
-					// delete subfolders
-					foreach($subfolders as $subfolder){
-						$subfolder->delete();
-					}
-				}
-				
-				// should we remove files?
-				if(get_input("files") == "yes"){
-					// find file in this folder
-					$options = array(
-						"type" => "object",
-						"subtype" => "file",
-						"container_guid" => $object->getOwner(),
-						"limit" => false,
-						"relationship" => FILE_TREE_RELATIONSHIP,
-						"relationship_guid" => $object->getGUID()
-					);
-					
-					if($files = elgg_get_entities_from_relationship($options)){
-						// delete files in folder
-						foreach($files as $file){
-							$file->delete();
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	function file_tree_can_edit_metadata_hook($hook, $type, $returnvalue, $params){
-		$result = $returnvalue;
-		
-		if(!empty($params) && is_array($params) && $result !== true){
-			if(array_key_exists("user", $params) && array_key_exists("entity", $params)){
-				$entity = $params["entity"];
-				$user = $params["user"];
-				
-				if($entity->getSubtype() == FILE_TREE_SUBTYPE){
-					$container_entity = $entity->getContainerEntity();
-					
-					if(($container_entity instanceof ElggGroup) && $container_entity->isMember($user) && ($container_entity->file_tree_structure_management_enable != "no")){
-						$result = true;
-					}
-				}
-			}
-		}
-		
-		return $result;
-	}
-	
 	function file_tree_folder_url_handler($entity){
 		global $CONFIG;
 		
 		return $CONFIG->wwwroot . "pg/file_tree/list/" . $entity->getContainer() . "#" . $entity->getGUID();
 	}
 	
-	function file_tree_folder_icon_hook($hook, $type, $returnvalue, $params){
-		global $CONFIG;
-		
-		$result = $returnvalue;
-		
-		if(array_key_exists("entity", $params) && array_key_exists("size", $params)){
-			$entity = $params["entity"];
-			$size = $params["size"];
-			
-			if($entity->getSubtype() == FILE_TREE_SUBTYPE){
-				switch($size) {
-					case "tiny":
-					case "medium":
-						$result = $CONFIG->wwwroot . "mod/file_tree/_graphics/folder_" . $size . ".png";
-						break;
-					default:
-						$result = $CONFIG->wwwroot . "mod/file_tree/_graphics/folder_small.png";
-						break;
-				}
-			}
-		}
-		
-		return $result;
-	}
-
 	// register default elgg events
 	register_elgg_event_handler("init", "system", "file_tree_init");
 	register_elgg_event_handler("pagesetup", "system", "file_tree_pagesetup");
@@ -263,9 +147,9 @@
 	
 	// register plugin hooks
 	register_plugin_hook("permissions_check:metadata", "object", "file_tree_can_edit_metadata_hook");
+	register_plugin_hook("access:collections:write", "all", "file_tree_write_acl_plugin_hook", 550);
 	
 	// register actions
 	register_action("file_tree/edit", false, dirname(__FILE__) . "/actions/edit.php");
 	register_action("file_tree/delete", false, dirname(__FILE__) . "/actions/delete.php");
 	
-?>
