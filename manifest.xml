@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin_manifest>
 	<field key="author" value="ColdTrick IT Solutions" />
-	<field key="version" value="1.2" />
+	<field key="version" value="1.2.1" />
 	<field key="description" value="Folders extension for Elgg Files"/>
 	<field key="website" value="http://www.coldtrick.com" />
 	<field key="copyright" value="(C) ColdTrick 2010" />
@@ -37,7 +37,7 @@ Credits
 ======================
 Version History
 ======================
-x.x:
+1.2.1 (2011-11-02):
 	- fixed: wrong name in group file free for access
 
 1.2 (2011-06-17):
