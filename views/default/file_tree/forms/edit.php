@@ -51,12 +51,10 @@
 	
 	$form_data .= "<div><label>" . elgg_echo("access") . "</label></div>\n";
 	if($page_owner instanceof ElggGroup){
-		$acl = get_access_collection($page_owner->group_acl);
-		
 		$access_options = array(
 			ACCESS_PUBLIC => elgg_echo("PUBLIC"),
 			ACCESS_LOGGED_IN => elgg_echo("LOGGED_IN"),
-			$page_owner->group_acl => $acl->name
+			$page_owner->group_acl => elgg_echo("groups:group") . ": " . $page_owner->name
 			);
 	}
 	$form_data .= elgg_view("input/access", array("internalname" => "access_id", "value" => $access_id, "options" => $access_options));

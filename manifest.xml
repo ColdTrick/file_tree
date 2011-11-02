@@ -37,6 +37,9 @@ Credits
 ======================
 Version History
 ======================
+x.x:
+	- fixed: wrong name in group file free for access
+
 1.2 (2011-06-17):
 	- added: widget for dashboard, profile and group
 
